@@ -9,5 +9,4 @@ public class Vip extends Customer{
     public String toString() {
         return "This is a VIP account.";
     }
-    
 }

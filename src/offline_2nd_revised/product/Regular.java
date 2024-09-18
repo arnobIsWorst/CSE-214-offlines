@@ -9,5 +9,4 @@ public class Regular extends Customer{
     public String toString() {
         return "This is a Regular account.";
     }
-    
 }
