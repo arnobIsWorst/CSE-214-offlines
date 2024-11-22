@@ -1,16 +1,22 @@
 package offline_3;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
-public class BackendStore {
-    private final NotificationService notificationService;
+public class ServerSide{
+    private final Map<Genres, MovieGenre> genreMap;
 
-    public BackendStore() {
-        notificationService = new NotificationService();
+    public ServerSide() {
+        this.genreMap = new HashMap<>();
+
+        for (Genres genre : Genres.values()) {
+            genreMap.put(genre, new MovieGenre(genre));
+        }
     }
 
-    public NotificationService getNotificationService() {
-        return notificationService;
+    public Genres getGenre(String genre) {
+        return Genres.valueOf(genre.toUpperCase());
     }
 
     public void addSubscriber(Observer observer) {
@@ -19,7 +25,7 @@ public class BackendStore {
             Set<Genres> favoriteGenres = user.getFavoriteGenres();
 
             for (Genres genre : favoriteGenres) {
-                notificationService.subscribe(genre, observer);
+                genreMap.get(genre).subscribe(observer);
             }
         } else {
             throw new IllegalArgumentException("Observer must be an instance of User");
@@ -32,7 +38,7 @@ public class BackendStore {
             Set<Genres> favoriteGenres = user.getFavoriteGenres();
 
             for (Genres genre : favoriteGenres) {
-                notificationService.unsubscribe(genre, observer);
+                genreMap.get(genre).unSubscribe(observer);
             }
         } else {
             throw new IllegalArgumentException("Observer must be an instance of User");
@@ -45,16 +51,16 @@ public class BackendStore {
             Set<Genres> newPreferences = user.getFavoriteGenres();
 
             for (Genres genre : Genres.values()) {
-                Set<Observer> observers = notificationService.getSubscribers(genre);
+                Set<Observer> observers = genreMap.get(genre).getSubscribers();
 
                 // If the user is subscribed to a genre but no longer prefers it
                 if (observers.contains(user) && !newPreferences.contains(genre)) {
-                    notificationService.unsubscribe(genre, user);
+                    genreMap.get(genre).unSubscribe(user);
                 }
             }
 
             for (Genres genre : newPreferences) {
-                notificationService.subscribe(genre, user);
+                genreMap.get(genre).subscribe(user);
             }
         } else {
             throw new IllegalArgumentException("Observer must be an instance of User");
@@ -62,10 +68,12 @@ public class BackendStore {
     }
 
     public void uploadMovie(String movieName, Genres genre) {
-        notificationService.notifySubscribers(genre, movieName);
+        genreMap.get(genre).notifySubscribers(movieName);
     }
 
     public void shutdown() {
-        notificationService.shutdown();
+        for (MovieGenre genre : genreMap.values()) {
+            genre.shutdown();
+        }
     }
 }

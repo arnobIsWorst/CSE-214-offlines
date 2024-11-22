@@ -2,7 +2,7 @@ package offline_3;
 
 public class MainApp {
     public static void main(String[] args) {
-        BackendStore DesiFlix = new BackendStore();
+        ServerSide DesiFlix = new ServerSide();
 
         // Creating users
         User Alice = new User("Alice");
@@ -12,7 +12,7 @@ public class MainApp {
         // Adding favorite genres for users
         Alice.addFavoriteGenre(Genres.THRILLER);
         Alice.addFavoriteGenre(Genres.HORROR);
-        Bob.addFavoriteGenre(Genres.COMEDY);
+        Bob.addFavoriteGenre(Genres.COMEDY);    
         Charlie.addFavoriteGenre(Genres.HORROR);
         Charlie.addFavoriteGenre(Genres.COMEDY);
 
@@ -31,7 +31,7 @@ public class MainApp {
         Alice.addFavoriteGenre(Genres.COMEDY);
         DesiFlix.updateUserInfo(Alice);
 
-        // Uploading a new movie
+        // Uploading a new movie    
         DesiFlix.uploadMovie("The Dark Knight", Genres.THRILLER);
         DesiFlix.uploadMovie("The Shining", Genres.HORROR);
         DesiFlix.uploadMovie("Superbad", Genres.COMEDY);
